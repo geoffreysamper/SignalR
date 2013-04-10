@@ -18,7 +18,7 @@ namespace Microsoft.AspNet.SignalR.Client
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Justification = "The IDisposable object is the return value.")]
         public static SignalRError GetError(this Exception ex)
         {
-            ex = ex.Unwrap();
+            //ex = ex.Unwrap();
             var wex = ex as WebException;
 
             var error = new SignalRError(ex);
@@ -54,23 +54,24 @@ namespace Microsoft.AspNet.SignalR.Client
         private static Stream Clone(Stream source)
         {
             var cloned = new MemoryStream();
-#if NET35
-            // Copy up to 2048 bytes at a time
-            byte[] buffer = new byte[2048];
+//#if NET35
+//            // Copy up to 2048 bytes at a time
+//            byte[] buffer = new byte[2048];
 
-            // Maintains how many bytes were read
-            int copiedBytes;
+//            // Maintains how many bytes were read
+//            int copiedBytes;
 
-            // Read bytes and copy them into a buffer making sure not to trigger the dispose
-            while ((copiedBytes = source.Read(buffer, 0, buffer.Length)) > 0)
-            {
-                // Write the copied bytes from the buffer into the cloned stream
-                cloned.Write(buffer, 0, copiedBytes);
-            }
+//            // Read bytes and copy them into a buffer making sure not to trigger the dispose
+//            while ((copiedBytes = source.Read(buffer, 0, buffer.Length)) > 0)
+//            {
+//                // Write the copied bytes from the buffer into the cloned stream
+//                cloned.Write(buffer, 0, copiedBytes);
+//            }
 
-#else
+//#else
+//            source.CopyTo(cloned);
+//#endif
             source.CopyTo(cloned);
-#endif
             // Move the stream pointers back to the original start locations
             if (source.CanSeek)
             {

@@ -18,9 +18,9 @@ using Microsoft.AspNet.SignalR.Client.Transports;
 using Microsoft.AspNet.SignalR.Infrastructure;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-#if (NET4 || NET45)
-using System.Security.Cryptography.X509Certificates;
-#endif
+//#if (NET4 || NET45)
+//using System.Security.Cryptography.X509Certificates;
+//#endif
 
 namespace Microsoft.AspNet.SignalR.Client
 {
@@ -41,9 +41,6 @@ namespace Microsoft.AspNet.SignalR.Client
 
         // The amount of time the client should attempt to reconnect before stopping.
         private TimeSpan _disconnectTimeout;
-
-        // Provides a way to cancel the the timeout that stops a reconnect cycle
-        private IDisposable _disconnectTimeoutOperation;
 
         // The default connection state is disconnected
         private ConnectionState _state;
@@ -69,9 +66,9 @@ namespace Microsoft.AspNet.SignalR.Client
         //The json serializer for the connections
         private JsonSerializer _jsonSerializer = new JsonSerializer();
 
-#if (NET4 || NET45)
-        private readonly X509CertificateCollection certCollection = new X509CertificateCollection();
-#endif
+//#if (NET4 || NET45)
+//        private readonly X509CertificateCollection certCollection = new X509CertificateCollection();
+//#endif
 
         /// <summary>
         /// Occurs when the <see cref="Connection"/> has received data from the server.
@@ -152,7 +149,6 @@ namespace Microsoft.AspNet.SignalR.Client
 
             Url = url;
             QueryString = queryString;
-            _disconnectTimeoutOperation = DisposableAction.Empty;
             Items = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
             State = ConnectionState.Disconnected;
             TraceLevel = TraceLevels.All;
@@ -228,13 +224,6 @@ namespace Microsoft.AspNet.SignalR.Client
         /// Gets and sets headers for the requests
         /// </summary>
         public IDictionary<string, string> Headers { get; private set; }
-
-#if !SILVERLIGHT
-        /// <summary>
-        /// Gets of sets proxy information for the connection.
-        /// </summary>
-        public IWebProxy Proxy { get; set; }
-#endif
 
         /// <summary>
         /// Gets the url for the connection.
@@ -515,7 +504,6 @@ namespace Microsoft.AspNet.SignalR.Client
 
                     Trace(TraceLevels.StateChanges, "Disconnect");
 
-                    _disconnectTimeoutOperation.Dispose();
                     _disconnectCts.Cancel();
                     _monitor.Dispose();
 
@@ -566,24 +554,24 @@ namespace Microsoft.AspNet.SignalR.Client
             return Send(this.JsonSerializeObject(value));
         }
 
-#if (NET4 || NET45)
-        /// <summary>
-        /// Adds a client certificate to the request
-        /// </summary>
-        /// <param name="certificate">Client Certificate</param>
-        public void AddClientCertificate(X509Certificate certificate)
-        {
-            lock (_stateLock)
-            {
-                if (State != ConnectionState.Disconnected)
-                {
-                    throw new InvalidOperationException(Resources.Error_CertsCanOnlyBeAddedWhenDisconnected);
-                }
+//#if (NET4 || NET45)
+//        /// <summary>
+//        /// Adds a client certificate to the request
+//        /// </summary>
+//        /// <param name="certificate">Client Certificate</param>
+//        public void AddClientCertificate(X509Certificate certificate)
+//        {
+//            lock (_stateLock)
+//            {
+//                if (State != ConnectionState.Disconnected)
+//                {
+//                    throw new InvalidOperationException(Resources.Error_CertsCanOnlyBeAddedWhenDisconnected);
+//                }
 
-                certCollection.Add(certificate);
-            }
-        }
-#endif
+//                certCollection.Add(certificate);
+//            }
+//        }
+//#endif
 
         public void Trace(TraceLevels level, string format, params object[] args)
         {
@@ -632,7 +620,6 @@ namespace Microsoft.AspNet.SignalR.Client
             // the server during negotiation.
             // If the client tries to reconnect for longer the server will likely have deleted its ConnectionId
             // topic along with the contained disconnect message.
-            _disconnectTimeoutOperation = SetTimeout(_disconnectTimeout, Disconnect);
             if (Reconnecting != null)
             {
                 Reconnecting();
@@ -643,7 +630,6 @@ namespace Microsoft.AspNet.SignalR.Client
         {
             // Prevent the timeout set OnReconnecting from firing and stopping the connection if we have successfully
             // reconnected before the _disconnectTimeout delay.
-            _disconnectTimeoutOperation.Dispose();
 
             if (Reconnected != null)
             {
@@ -677,16 +663,16 @@ namespace Microsoft.AspNet.SignalR.Client
         [SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", MessageId = "0", Justification = "This is called by the transport layer")]
         void IConnection.PrepareRequest(IRequest request)
         {
-#if WINDOWS_PHONE
-            // http://msdn.microsoft.com/en-us/library/ff637320(VS.95).aspx
-            request.UserAgent = CreateUserAgentString("SignalR.Client.WP7");
-#else
-#if SILVERLIGHT
-            // Useragent is not possible to set with Silverlight, not on the UserAgent property of the request nor in the Headers key/value in the request
-#else
-            request.UserAgent = CreateUserAgentString("SignalR.Client");
-#endif
-#endif
+//#if WINDOWS_PHONE
+//            // http://msdn.microsoft.com/en-us/library/ff637320(VS.95).aspx
+//            request.UserAgent = CreateUserAgentString("SignalR.Client.WP7");
+//#else
+//#if SILVERLIGHT
+//            // Useragent is not possible to set with Silverlight, not on the UserAgent property of the request nor in the Headers key/value in the request
+//#else
+//            request.UserAgent = CreateUserAgentString("SignalR.Client");
+//#endif
+//#endif
             if (Credentials != null)
             {
                 request.Credentials = Credentials;
@@ -697,17 +683,11 @@ namespace Microsoft.AspNet.SignalR.Client
                 request.CookieContainer = CookieContainer;
             }
 
-#if !SILVERLIGHT
-            if (Proxy != null)
-            {
-                request.Proxy = Proxy;
-            }
-#endif
             request.SetRequestHeaders(Headers);
 
-#if (NET4 || NET45)
-            request.AddClientCerts(certCollection);
-#endif
+//#if (NET4 || NET45)
+            //request.AddClientCerts(certCollection);
+//#endif
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Can be called via other clients.")]
@@ -715,37 +695,36 @@ namespace Microsoft.AspNet.SignalR.Client
         {
             if (_assemblyVersion == null)
             {
-#if NETFX_CORE
-                _assemblyVersion = new Version("1.1.0");
-#else
+//#if NETFX_CORE
+//                _assemblyVersion = new Version("1.1.0");
+//#else
+//                _assemblyVersion = new AssemblyName(typeof(Connection).Assembly.FullName).Version;
+//#endif
                 _assemblyVersion = new AssemblyName(typeof(Connection).Assembly.FullName).Version;
-#endif
             }
 
-#if NETFX_CORE
+//#if NETFX_CORE
+//            return String.Format(CultureInfo.InvariantCulture, "{0}/{1} ({2})", client, _assemblyVersion, "Unknown OS");
+//#else
+//            return String.Format(CultureInfo.InvariantCulture, "{0}/{1} ({2})", client, _assemblyVersion, Environment.OSVersion);
+//#endif
             return String.Format(CultureInfo.InvariantCulture, "{0}/{1} ({2})", client, _assemblyVersion, "Unknown OS");
-#else
-            return String.Format(CultureInfo.InvariantCulture, "{0}/{1} ({2})", client, _assemblyVersion, Environment.OSVersion);
-#endif
         }
 
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes", Justification = "The Version constructor can throw exceptions of many different types. Failure is indicated by returning false.")]
         private static bool TryParseVersion(string versionString, out Version version)
         {
-#if WINDOWS_PHONE || NET35
-            try
-            {
-                version = new Version(versionString);
-                return true;
-            }
-            catch
-            {
-                version = null;
-                return false;
-            }
-#else
+            //try
+            //{
+            //    version = new Version(versionString);
+            //    return true;
+            //}
+            //catch
+            //{
+            //    version = null;
+            //    return false;
+            //}
             return Version.TryParse(versionString, out version);
-#endif
         }
 
         private static string CreateQueryString(IDictionary<string, string> queryString)
@@ -779,13 +758,11 @@ namespace Microsoft.AspNet.SignalR.Client
                 Debug.WriteLine(value);
             }
 
-#if NETFX_CORE
             public override void Write(char value)
             {
                 // This is wrong we don't call it
                 Debug.WriteLine(value);
             }
-#endif
 
             public override Encoding Encoding
             {

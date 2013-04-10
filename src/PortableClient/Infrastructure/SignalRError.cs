@@ -56,7 +56,7 @@ namespace Microsoft.AspNet.SignalR.Client
             {
                 if (_response != null)
                 {
-                    _response.Close();
+                    _response.Dispose();
                 }
             }
         }

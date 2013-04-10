@@ -1,7 +1,6 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.md in the project root for license information.
 
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.Net;
 #if (NET4 || NET45)
 using System.Security.Cryptography.X509Certificates;
@@ -28,13 +27,6 @@ namespace Microsoft.AspNet.SignalR.Client.Http
         /// The cookies for this request.
         /// </summary>
         CookieContainer CookieContainer { get; set; }
-
-#if !SILVERLIGHT
-        /// <summary>
-        /// The proxy information for this request.
-        /// </summary>
-        IWebProxy Proxy { get; set; }
-#endif
 
         /// <summary>
         /// The accept header for this request.

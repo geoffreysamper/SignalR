@@ -87,22 +87,5 @@ namespace Microsoft.AspNet.SignalR.Client
 
             return connection.State == ConnectionState.Reconnecting;
         }
-
-#if !WINDOWS_PHONE && !SILVERLIGHT && !NET35
-        public static IObservable<string> AsObservable(this Connection connection)
-        {
-            return connection.AsObservable(value => value);
-        }
-
-        public static IObservable<T> AsObservable<T>(this Connection connection)
-        {
-            return connection.AsObservable(value => connection.JsonDeserializeObject<T>(value));
-        }
-
-        public static IObservable<T> AsObservable<T>(this Connection connection, Func<string, T> selector)
-        {
-            return new ObservableConnection<T>(connection, selector);
-        }
-#endif
     }
 }

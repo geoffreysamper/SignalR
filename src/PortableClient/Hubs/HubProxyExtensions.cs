@@ -222,7 +222,6 @@ namespace Microsoft.AspNet.SignalR.Client.Hubs
             return new DisposableAction(() => subscription.Received -= handler);
         }
 
-#if !WINDOWS_PHONE && !SILVERLIGHT && !NET35
         /// <summary>
         /// Registers for an event with the specified name and callback
         /// </summary>
@@ -357,28 +356,6 @@ namespace Microsoft.AspNet.SignalR.Client.Hubs
 
             return new DisposableAction(() => subscription.Received -= handler);
         }
-
-        /// <summary>
-        /// Registers a <see cref="IHubProxy"/> event has an <see cref="T:IObservable{T}"/>.
-        /// </summary>
-        /// <param name="proxy">The <see cref="IHubProxy"/></param>
-        /// <param name="eventName">The name of the event.</param>
-        /// <returns>An <see cref="T:IObservable{object[]}"/>.</returns>
-        public static IObservable<IList<JToken>> Observe(this IHubProxy proxy, string eventName)
-        {
-            if (proxy == null)
-            {
-                throw new ArgumentNullException("proxy");
-            }
-
-            if (String.IsNullOrEmpty(eventName))
-            {
-                throw new ArgumentNullException("eventName");
-            }
-
-            return new Hubservable(proxy, eventName);
-        }
-#endif
 
         private static T Convert<T>(JToken obj, JsonSerializer serializer)
         {

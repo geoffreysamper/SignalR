@@ -54,10 +54,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Microsoft.AspNet.SignalR.Client45\Microsoft.AspNet.SignalR.Client45.csproj">
-      <Project>{50f8a174-695e-498c-b105-bdbe6b398646}</Project>
-      <Name>Microsoft.AspNet.SignalR.Client45</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\src\Microsoft.AspNet.SignalR.Hosting.Memory\Microsoft.AspNet.SignalR.Hosting.Memory.csproj">
       <Project>{055F2118-FE29-4219-A28A-3D6F0889652E}</Project>
       <Name>Microsoft.AspNet.SignalR.Hosting.Memory</Name>
@@ -65,6 +61,10 @@
     <ProjectReference Include="..\..\src\Microsoft.AspNet.SignalR.Core\Microsoft.AspNet.SignalR.Core.csproj">
       <Project>{1B9A82C4-BCA1-4834-A33E-226F17BE070B}</Project>
       <Name>Microsoft.AspNet.SignalR.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\src\PortableClient\PortableClient.csproj">
+      <Project>{c6921f8f-f04b-4786-aa0a-32de7572cef5}</Project>
+      <Name>PortableClient</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

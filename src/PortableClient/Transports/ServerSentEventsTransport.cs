@@ -83,7 +83,6 @@ namespace Microsoft.AspNet.SignalR.Client.Transports
             // If we're reconnecting add /connect to the url
             bool reconnecting = initializeCallback == null;
             var callbackInvoker = new ThreadSafeInvoker();
-            var requestDisposer = new Disposer();
 
             var url = (reconnecting ? connection.Url : connection.Url + "connect") + GetReceiveQueryString(connection, data);
 
@@ -114,7 +113,6 @@ namespace Microsoft.AspNet.SignalR.Client.Transports
                             Reconnect(connection, data, disconnectToken);
                         }
                     }
-                    requestDisposer.Dispose();
                 }
                 else
                 {
@@ -181,7 +179,6 @@ namespace Microsoft.AspNet.SignalR.Client.Transports
                                 connection.OnError(exception);
                             }
                         }
-                        requestDisposer.Dispose();
                         esCancellationRegistration.Dispose();
                         response.Dispose();
 
@@ -211,16 +208,15 @@ namespace Microsoft.AspNet.SignalR.Client.Transports
                 {
                     callbackInvoker.Invoke((cb, token) =>
                     {
-#if NET35 || WINDOWS_PHONE
-                        cb(new OperationCanceledException(Resources.Error_ConnectionCancelled));
-#else
+//#if NET35 || WINDOWS_PHONE
+//                        cb(new OperationCanceledException(Resources.Error_ConnectionCancelled));
+//#else
+//                        cb(new OperationCanceledException(Resources.Error_ConnectionCancelled, token));
+//#endif
                         cb(new OperationCanceledException(Resources.Error_ConnectionCancelled, token));
-#endif
                     }, errorCallback, disconnectToken);
                 }
             }, _request);
-
-            requestDisposer.Set(requestCancellationRegistration);
 
             if (errorCallback != null)
             {

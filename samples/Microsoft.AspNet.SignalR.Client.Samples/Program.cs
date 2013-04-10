@@ -113,7 +113,7 @@ namespace Microsoft.AspNet.SignalR.Client.Samples
             }
             else if (key.Key == ConsoleKey.D2)
             {
-                startTask = connection.Start(new Client.Transports.WebSocketTransport());
+                //startTask = connection.Start(new Client.Transports.WebSocketTransport());
             }
             else if (key.Key == ConsoleKey.D3)
             {
