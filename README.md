@@ -23,7 +23,7 @@ See the [documentation](https://github.com/SignalR/SignalR/wiki)
 ## Building the source
 
 ```
-git clone git@github.com:SignalR/SignalR.git (or https if you use https)
+git clone git@github.com:SignalR/SignalR.git (or https if you use https)asdfasdfsd
 ```
 
 ### Windows
