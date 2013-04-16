@@ -14,7 +14,7 @@ See the [documentation](https://github.com/SignalR/SignalR/wiki)
     Install-Package Microsoft.AspNet.SignalR -pre
 
 ## Get a sample on NuGet, straight into your app!
-
+asdfasdfasdfasdf
     Install-Package Microsoft.AspNet.SignalR.Sample
 	
 ## LICENSE
